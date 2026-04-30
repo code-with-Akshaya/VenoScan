@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VenoScan - Snake Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="index-page">
+    <div class="container">
+        <h1 class="title">VenomScan</h1>
+        <h2 class="subtitle">Welcome</h2>
+
+        <section class="info-section">
+            <p class="info-text" style="font-family: 'Times New Roman', Times, serif; font-size: 15px;">
+                Venomous and non-venomous snakes play crucial roles in ecosystems, but understanding their impact on human health is essential.
+                Accurate identification is vital for research and treatment, as venomous bites may require antivenoms.
+            </p>
+        </section>
+
+        <p class="instruction-text" style="color:blueviolet; font-size: 20px;">
+            Upload images and/or videos to classify:
+        </p>
+
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="files" id="fileInput" accept="image/*,video/*" multiple required onchange="previewFiles(event)">
+            <button type="submit" class="btn-upload">Classify</button>
+        </form>
+
+        <!-- Error message display -->
+        <p id="error-message" style="color: red;"></p>
+
+        <!-- Scrollable Preview Section -->
+        <div class="file-preview" id="preview-container"></div>
+    </div>
+
+    <script>
+        function previewFiles(event) {
+            var previewContainer = document.getElementById('preview-container');
+            var errorMessage = document.getElementById('error-message');
+            previewContainer.innerHTML = '';
+            errorMessage.textContent = '';
+
+            let files = event.target.files;
+            if (files.length === 0) {
+                errorMessage.textContent = "Please select at least one file.";
+                return;
+            }
+
+            for (let file of files) {
+                let previewElement;
+                if (file.type.startsWith('image')) {
+                    previewElement = document.createElement('img');
+                    previewElement.src = URL.createObjectURL(file);
+                    previewElement.classList.add('preview-image');
+                } else if (file.type.startsWith('video')) {
+                    previewElement = document.createElement('video');
+                    previewElement.src = URL.createObjectURL(file);
+                    previewElement.controls = true;
+                    previewElement.classList.add('preview-video');
+                }
+                previewContainer.appendChild(previewElement);
+            }
+        }
+    </script>
+</body>
+</html>
