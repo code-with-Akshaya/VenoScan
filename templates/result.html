@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classification Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="result-page">
+    <div class="container">
+        <h1>Classification Results</h1>
+        <div class="results-grid">
+            {% for result in results %}
+            <div class="result-card">
+                <div class="input-container">
+                    {% if result.filetype == 'image' %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ result.filename) }}" alt="Uploaded Image">
+                    {% else %}
+                        <video controls>
+                            <source src="{{ url_for('static', filename='uploads/' ~ result.filename) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% endif %}
+                </div>
+
+                <div class="details">
+                    <p><strong>Classification:</strong> {{ result.classification }}</p>
+                    <p><strong>Accuracy:</strong> {{ result.accuracy }}</p>
+                </div>
+
+                {% if result.filetype == 'video' %}
+                    <div class="frame-section">
+                        <h3>Frames Used for Classification:</h3>
+                        <div class="frame-grid">
+                            {% for frame in result.frames %}
+                                <div class="frame-card">
+                                    <img src="{{ url_for('static', filename='uploads/' ~ frame.frame) }}" alt="Frame">
+                                    <p><strong>Classification:</strong> {{ frame.classification }}</p>
+                                    <p><strong>Accuracy:</strong> {{ frame.accuracy }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <a href="{{ url_for('index') }}" class="back-button">Upload More</a>
+    </div>
+</body>
+</html>
